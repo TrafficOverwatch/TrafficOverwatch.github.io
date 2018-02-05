@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Monitoring</title>
+    <style>
+        #map {
+            height: 700px;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <span class="open-slide">
+                     <a href="#" onclick="openSlideMenu()">
+                        <svg width="30" height="30">
+                            <path d="M0,5 30,5" stroke="#fff"
+                            stroke-width="5"/>
+                            <path d="M0,14 30,14" stroke="#fff"
+                            stroke-width="5"/>
+                            <path d="M0,23 30,23" stroke="#fff"
+                            stroke-width="5"/>
+                        </svg>
+                    </a>
+                </span>
+        <ul class="navbar-nav">
+            <li><a href="home.html">Home</a></li>
+            <!--  <li><a href="map.html">Map</a></li> -->
+            <li><a href="monitoring.html">Monitoring</a></li>
+            <li><a href="history.html">History</a></li>
+            <li><a href="contact.html">Contacts</a></li>
+        </ul>
+    </nav>
+    <div id="side-menu" class="side-nav">
+        <a href="#" class="btn-close" onclick="closeSlideMenu()">&times;</a>
+        <a href="home.html">Home</a>
+        <a href="monitoring.html">monitoring</a>
+
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <div id="map">
+
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyDlRiD86cqeiqvYG1rKgTTPdcTND5alvrI",
+            authDomain: "piioc-780c4.firebaseapp.com",
+            databaseURL: "https://piioc-780c4.firebaseio.com",
+            projectId: "piioc-780c4",
+            storageBucket: "piioc-780c4.appspot.com",
+            messagingSenderId: "159586865733"
+        };
+        firebase.initializeApp(config);
+
+
+        var AccidentRef = firebase.database().ref().child("Accident");
+        var ParkingRef = firebase.database().ref().child("Parking");
+        var TrafficRef = firebase.database().ref().child("Traffic");
+        var SpeedingRef = firebase.database().ref().child("Speeding");
+
+        var d = new Date();
+        var n = d.getDate();
+
+
+        function initMap() {
+            // Map options
+
+            var options = {
+                zoom: 12,
+                center: {
+                    lat: -20.315263,
+                    lng: 57.541943
+                }
+            }
+
+            // New map
+            var map = new google.maps.Map(document.getElementById('map'), options);
+
+
+            // Ref to Accident in firebase
+            AccidentRef.orderByKey().limitToLast(10).on('child_added', function(snap) {
+                var cords = snap.val();
+                var coords = cords.split(" ");
+                var LAT = coords[0];
+                var LONG = coords[1];
+                var hour = coords[2];
+                var minute = coords[3];
+                var date = coords[4];
+                var month = coords[5];
+                var year = coords[6];
+                //console.log(LAT);
+                if (n == date) { // check if it is for today
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(LAT, LONG),
+                        map: map
+
+                    });
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: "Accident: " + hour + ":" + minute + "-" + date + ":" + month + ":" + year
+                    });
+
+                    marker.addListener('click', function() {
+                        infoWindow.open(map, marker);
+                    });
+                    //  icon: 'images/acci.png'
+                    marker.setIcon('images/acci.png');
+                }
+            });
+
+            // Ref to parking in firebase
+            ParkingRef.orderByKey().limitToLast(10).on('child_added', function(snap) {
+                var cords = snap.val();
+                var coords = cords.split(" ");
+                var LAT = coords[0];
+                var LONG = coords[1];
+                var hour = coords[2];
+                var minute = coords[3];
+                var date = coords[4];
+                var month = coords[5];
+                var year = coords[6];
+                //console.log(LAT);
+                if (n == date) {
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(LAT, LONG),
+                        map: map
+
+                    });
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: "Free Parking: " + hour + ":" + minute + "-" + date + ":" + month + ":" + year
+                    });
+
+                    marker.addListener('click', function() {
+                        infoWindow.open(map, marker);
+                    });
+                    //  icon: 'images/acci.png'
+                    marker.setIcon('images/park.png');
+                }
+            });
+
+            // Ref to traffic in firebase
+            TrafficRef.orderByKey().limitToLast(10).on('child_added', function(snap) {
+                var cords = snap.val();
+                var coords = cords.split(" ");
+                var LAT = coords[0];
+                var LONG = coords[1];
+                var hour = coords[2];
+                var minute = coords[3];
+                var date = coords[4];
+                var month = coords[5];
+                var year = coords[6];
+                //console.log(LAT);
+                if (n == date) {
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(LAT, LONG),
+                        map: map
+
+                    });
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: "Traffic Jam: " + hour + ":" + minute + "-" + date + ":" + month + ":" + year
+                    });
+
+                    marker.addListener('click', function() {
+                        infoWindow.open(map, marker);
+                    });
+                    //  icon: 'images/acci.png'
+                    marker.setIcon('images/traff_jam.png');
+                }
+            });
+
+            // Ref to Speeding in firebase
+            SpeedingRef.orderByKey().limitToLast(10).on('child_added', function(snap) {
+                var cords = snap.val();
+                var coords = cords.split(" ");
+                var LAT = coords[0];
+                var LONG = coords[1];
+                var hour = coords[2];
+                var minute = coords[3];
+                var date = coords[4];
+                var month = coords[5];
+                var year = coords[6];
+                var speed = coords[7]
+                    //console.log(LAT);
+                if (n == date) {
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(LAT, LONG),
+                        map: map
+
+                    });
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: "Speeding: " + hour + ":" + minute + "-" + date + ":" + month + ":" + year + " with speed: " + speed + "Kmph"
+                    });
+
+                    marker.addListener('click', function() {
+                        infoWindow.open(map, marker);
+                    });
+                    //  icon: 'images/acci.png'
+                    marker.setIcon('images/speeding.png');
+                }
+            });
+
+
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDX7QYdU6JfZMTHgFSeo6z9aiFN5DzRwhY&callback=initMap">
+    </script>
+
+    <script>
+        function openSlideMenu() {
+            document.getElementById('side-menu').style.width = '250px';
+            document.getElementById('main').style.marginLeft = '250px';
+        }
+
+        function closeSlideMenu() {
+            document.getElementById('side-menu').style.width = '0px';
+            document.getElementById('main').style.marginLeft = '0px';
+        }
+    </script>
+</body>
+
+</html>

@@ -67,6 +67,10 @@
         var TrafficRef = firebase.database().ref().child("Traffic");
         var SpeedingRef = firebase.database().ref().child("Speeding");
 
+        var d = new Date();
+        var n = d.getDate();
+        var h = d.getHours();
+
 
         function initMap() {
             // Map options
@@ -95,13 +99,17 @@
                 var month = coords[5];
                 var year = coords[6];
                 //console.log(LAT);
+
+                var hr = parseInt(hour) + 4;
+                var mn = parseInt(month) - 6;
+
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(LAT, LONG),
                     map: map
 
                 });
                 var infoWindow = new google.maps.InfoWindow({
-                    content: "Accident: " + hour + ":" + minute + "-" + date + ":" + month + ":" + year
+                    content: "Accident: " + hr + ":" + minute + "-" + date + ":" + mn + ":" + year
                 });
 
                 marker.addListener('click', function() {
@@ -123,13 +131,17 @@
                 var month = coords[5];
                 var year = coords[6];
                 //console.log(LAT);
+
+                var hr = parseInt(hour) + 4;
+                var mn = parseInt(month) - 6;
+
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(LAT, LONG),
                     map: map
 
                 });
                 var infoWindow = new google.maps.InfoWindow({
-                    content: "Free Parking: " + hour + ":" + minute + "-" + date + ":" + month + ":" + year
+                    content: "Free Parking: " + hr + ":" + minute + "-" + date + ":" + mn + ":" + year
                 });
 
                 marker.addListener('click', function() {
@@ -151,13 +163,17 @@
                 var month = coords[5];
                 var year = coords[6];
                 //console.log(LAT);
+
+                var hr = parseInt(hour) + 4;
+                var mn = parseInt(month) - 6;
+
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(LAT, LONG),
                     map: map
 
                 });
                 var infoWindow = new google.maps.InfoWindow({
-                    content: "Traffic Jam: " + hour + ":" + minute + "-" + date + ":" + month + ":" + year
+                    content: "Traffic Jam: " + hr + ":" + minute + "-" + date + ":" + mn + ":" + year
                 });
 
                 marker.addListener('click', function() {
@@ -181,13 +197,16 @@
                 var speed = coords[7]
                     //console.log(LAT);
 
+                var hr = parseInt(hour) + 4;
+                var mn = parseInt(month) - 6;
+
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(LAT, LONG),
                     map: map
 
                 });
                 var infoWindow = new google.maps.InfoWindow({
-                    content: "Speeding: " + hour + ":" + minute + "-" + date + ":" + month + ":" + year + " with speed: " + speed + "Kmph"
+                    content: "Speeding: " + hr + ":" + minute + "-" + date + ":" + mn + ":" + year + " with speed: " + speed + "Kmph"
                 });
 
                 marker.addListener('click', function() {
